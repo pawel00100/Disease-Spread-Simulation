@@ -1,16 +1,22 @@
-from src.Map import MapPosition
+from Map import MapPosition, Map
 import random
 
 class Person:
-    def __init__(self, pos: MapPosition) -> None:
+    def __init__(self, pos: MapPosition, map: Map) -> None:
         self.hasVirus = None # to be ultimately replaced with list of hosted viruses?
         self.dieseases = []
         self.age = None
         self.pos = pos
+        self.map = map
 
     def step(self) -> MapPosition:
-        self.pos += (random.randint(-1,1), random.randint(-1,1)) #TODO make sure is in boundaies
+        x, y = random.randint(-1, 1), random.randint(-1, 1)
+        if self.on_map(self.pos + (x, y)):
+            self.pos += (x, y) 
         return self
+
+    def on_map(self, new_pos: MapPosition) -> bool:
+        return (self.map.x_min <= new_pos.x_pos < self.map.x_max) and (self.map.y_min <= new_pos.y_pos < self.map.y_max)
 
     def __repr__(self) -> str:
         return "Person at pos " + self.pos.__repr__()

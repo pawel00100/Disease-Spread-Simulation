@@ -1,7 +1,6 @@
 from unittest import TestCase
-
-from src.Person import Person
-from src.SimulationState import SimulationState, MapPosition
+from Person import Person
+from SimulationState import SimulationState, MapPosition
 
 
 class TestSimulationState(TestCase):

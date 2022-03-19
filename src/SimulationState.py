@@ -1,12 +1,11 @@
 import math
 from typing import Dict
-
-from src.Map import MapPosition, in_range
-from src.Person import Person
+from Map import MapPosition, in_range
+from Person import Person
 
 
 class SimulationState:
-    def __init__(self, people: dict[Person,MapPosition]) -> None:
+    def __init__(self, people: Dict[Person,MapPosition]) -> None:
         super().__init__()
         self.people = people  # to be replaced with better data structure in the future
 

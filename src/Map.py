@@ -23,11 +23,12 @@ class MapPosition:
 
 
 class Map:
-    def __init__(self, size_x, size_y) -> None:
+    def __init__(self, size_x, size_y, padding: int = 2) -> None:
         super().__init__()
-        self.x_min = -size_x/2
-        self.x_max = size_x/2
-        self.y_min = -size_y/2
-        self.y_max = size_y/2
+        self.padding = padding
+        self.x_min = padding
+        self.x_max = size_x - padding
+        self.y_min = padding
+        self.y_max = size_y - padding
 
 
