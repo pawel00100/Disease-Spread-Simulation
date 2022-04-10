@@ -23,16 +23,15 @@ class MapPosition:
 
 
 class Map:
-    def __init__(self, size_x, size_y, padding: int = 2) -> None:
+    def __init__(self, size_x: int, size_y: int) -> None:
         super().__init__()
-        self.padding = padding
-        self.x_min = padding
-        self.x_max = size_x - padding
-        self.y_min = padding
-        self.y_max = size_y - padding
+        self.x_min = 0
+        self.x_max = size_x
+        self.y_min = 0
+        self.y_max = size_y
 
     def on_map(self, new_pos: MapPosition) -> bool:
         return (self.x_min <= new_pos.x_pos < self.x_max) and (self.y_min <= new_pos.y_pos < self.y_max)
 
     def dimensions(self):
-        return (self.x_max - self.x_min, self.y_max - self.y_min)
+        return (self.x_max, self.y_max)

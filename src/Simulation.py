@@ -50,7 +50,7 @@ class Simulation:
         for person, pos in self.simulation_state.people.items():
             x = pos.pos.x_pos
             y = pos.pos.y_pos
-            padding = self.map.padding
+            padding = 2
             img = ImageDraw.Draw(image)
             img = img.ellipse([(x-padding, y-padding), (x+padding, y+padding)], get_color(person))
         return image
