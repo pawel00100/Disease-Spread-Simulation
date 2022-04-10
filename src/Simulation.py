@@ -2,8 +2,10 @@ from Map import Map, MapPosition
 from Person import Person
 from SimulationState import SimulationState
 import random
-from typing import Tuple
-from PIL import Image, ImageDraw
+
+import ImageGenerator
+from src.ImageGenerator import ImageGenerator
+
 
 def generate_person(pos: MapPosition, map: Map):
     return Person(pos, map)
@@ -24,36 +26,15 @@ class Simulation:
     def __init__(self, map: Map, num_people: int) -> None:
         self.map = map
         self.simulation_state = SimulationState(generate_people(num_people, self.map))
-        self.imgs = []
+        self.image_generator = ImageGenerator()
 
     def step(self):
         self.simulation_state.step()
-        # print(self.simulation_state.people)
-        img = self.to_image()
-        self.imgs.append(img)
+        self.image_generator.add_state(self.simulation_state, self.map)
 
     def steps(self, n):
         [self.step() for _ in range(n)]
-        self.imgs[0].save('disease_spread.gif', save_all=True, append_images=self.imgs[1:], format='GIF', optimize=False, duration=90)
-        
-    def to_image(self) -> Image.Image:
-        background_color = (0, 0, 0)
-        size = self.map.dimensions()
-        image = Image.new("RGB", size, background_color)
-
-        def get_color(person: Person):
-            red = (255, 0, 0)
-            blue = (0, 200, 235)
-            green = (0, 205, 0)
-            return blue
-
-        for person, pos in self.simulation_state.people.items():
-            x = pos.pos.x_pos
-            y = pos.pos.y_pos
-            padding = 2
-            img = ImageDraw.Draw(image)
-            img = img.ellipse([(x-padding, y-padding), (x+padding, y+padding)], get_color(person))
-        return image
+        self.image_generator.save_image()
 
 
 HEIGHT = 300
