@@ -5,9 +5,6 @@ import random
 from typing import Tuple
 from PIL import Image, ImageDraw
 
-HIGH = 300
-WIDTH = 300
-
 def generate_person(pos: MapPosition, map: Map):
     return Person(pos, map)
 
@@ -24,8 +21,8 @@ def generate_people(n: int, map: Map):
 
 
 class Simulation:
-    def __init__(self, num_people) -> None:
-        self.map = Map(HIGH, WIDTH)
+    def __init__(self, map: Map, num_people: int) -> None:
+        self.map = map
         self.simulation_state = SimulationState(generate_people(num_people, self.map))
         self.imgs = []
 
@@ -41,7 +38,7 @@ class Simulation:
         
     def to_image(self) -> Image.Image:
         background_color = (0, 0, 0)
-        size = (HIGH, WIDTH)
+        size = self.map.dimensions()
         image = Image.new("RGB", size, background_color)
 
         def get_color(person: Person):
@@ -58,4 +55,7 @@ class Simulation:
             img = img.ellipse([(x-padding, y-padding), (x+padding, y+padding)], get_color(person))
         return image
 
-Simulation(90).steps(500)
+
+HEIGHT = 300
+WIDTH = 300
+Simulation(Map(HEIGHT, WIDTH), 90).steps(500)

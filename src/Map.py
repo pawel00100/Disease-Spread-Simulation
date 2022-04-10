@@ -34,3 +34,5 @@ class Map:
     def on_map(self, new_pos: MapPosition) -> bool:
         return (self.x_min <= new_pos.x_pos < self.x_max) and (self.y_min <= new_pos.y_pos < self.y_max)
 
+    def dimensions(self):
+        return (self.x_max - self.x_min, self.y_max - self.y_min)
