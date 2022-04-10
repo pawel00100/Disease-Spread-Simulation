@@ -31,4 +31,6 @@ class Map:
         self.y_min = padding
         self.y_max = size_y - padding
 
+    def on_map(self, new_pos: MapPosition) -> bool:
+        return (self.x_min <= new_pos.x_pos < self.x_max) and (self.y_min <= new_pos.y_pos < self.y_max)
 

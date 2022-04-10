@@ -11,12 +11,9 @@ class Person:
 
     def step(self) -> MapPosition:
         x, y = random.randint(-1, 1), random.randint(-1, 1)
-        if self.on_map(self.pos + (x, y)):
-            self.pos += (x, y) 
+        if self.map.on_map(self.pos + (x, y)):
+            self.pos += (x, y)
         return self
-
-    def on_map(self, new_pos: MapPosition) -> bool:
-        return (self.map.x_min <= new_pos.x_pos < self.map.x_max) and (self.map.y_min <= new_pos.y_pos < self.map.y_max)
 
     def __repr__(self) -> str:
         return "Person at pos " + self.pos.__repr__()
