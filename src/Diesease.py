@@ -11,6 +11,12 @@ class Disease:
     def step(self):
         raise NotImplementedError("This class is considered abstract")
 
+    def type(self):
+        raise NotImplementedError("This class is considered abstract")
+
+    def clone(self, host):
+        raise NotImplementedError("This class is considered abstract")
+
 
 class Virus1(Disease):
     def __init__(self, host) -> None:
@@ -28,5 +34,11 @@ class Virus1(Disease):
             if (random.random() - chance) > 0:
                 self.host.die()
 
+    def clone(self, host):
+        return Virus1(host)
+
+    def type(self):
+        return "Virus1"
+
     def __repr__(self) -> str:
-        return "Virus1{" + "severity:" + str(self.severity) + ", diesaseImmunity:+" + str(self.disease_immunity) + "}"
+        return "Virus1{" + "severity:" + str(self.severity) + ", diseaseImmunity:+" + str(self.disease_immunity) + "}"

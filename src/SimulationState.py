@@ -27,8 +27,10 @@ class SimulationState:
     def spread_diesase(self, person):
         neighbors = self.find_neighbors(person)
         for neighbor in list(neighbors):
-            print("Contact")
-            neighbor.diseases.append(Virus1(neighbor))
+            host_diesase = person.diseases[0] #TODO: don't use first virus but most relevant
+            if host_diesase.type() not in map(lambda d: d.type(), neighbor.diseases):
+                print("Spread")
+                neighbor.diseases.append(host_diesase.clone(neighbor))
 
     def find_neighbors(self, person: Person, predicate=None):
         if (predicate is None):
