@@ -2,7 +2,7 @@ from typing import Dict
 
 from Map import MapPosition, in_range
 from Person import Person
-from src.Diesease import Virus1
+from Diesease import Virus1
 
 
 class SimulationState:
@@ -27,9 +27,11 @@ class SimulationState:
     def spread_diesase(self, person):
         neighbors = self.find_neighbors(person)
         for neighbor in list(neighbors):
+            if neighbor.resistant == True or neighbor.as_nt == True:
+                continue
             host_diesase = person.diseases[0] #TODO: don't use first virus but most relevant
             if host_diesase.type() not in map(lambda d: d.type(), neighbor.diseases):
-                print("Spread")
+                # print("Spread")
                 neighbor.diseases.append(host_diesase.clone(neighbor))
 
     def find_neighbors(self, person: Person, predicate=None):
