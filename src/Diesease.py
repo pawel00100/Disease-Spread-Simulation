@@ -1,5 +1,5 @@
 import random
-
+from Person import PersonState
 
 class Disease:
     def __init__(self, host) -> None:
@@ -25,7 +25,7 @@ class Virus1(Disease):
         self.immunity_growth = 1.0
 
     def step(self):
-        self.severity += self.severity_growth + self.host.age / 50 - self.host.immunity_modifier / 10
+        self.severity += self.severity_growth + self.host.age / 40 - self.host.immunity_modifier / 10
 
         self.disease_immunity += self.immunity_growth + self.host.immunity_modifier / 3
 
@@ -34,15 +34,12 @@ class Virus1(Disease):
             if (random.random() - chance) > 0:
                 self.host.die()
    
-        if self.disease_immunity > 120:
-            self.host.as_t = False
-            self.host.as_nt = False 
+        if self.disease_immunity > 150:
             self.host.resistance()
-        elif self.disease_immunity > 80:
-            self.host.as_t = False
-            self.host.as_nt = True  
-        elif self.disease_immunity > 20:
-            self.host.as_t = True
+        elif self.disease_immunity > 90:
+            self.host.state = PersonState.DIESASE_HOST_ASYMPTOMATIC_NONTRANSMISSABLE
+        elif self.disease_immunity > 30:
+            self.host.state = PersonState.DIESASE_HOST_ASYMPTOMATIC_TRANSMISSABLE
 
     def clone(self, host):
         return Virus1(host)

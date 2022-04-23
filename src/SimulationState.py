@@ -1,7 +1,6 @@
 from typing import Dict
-
 from Map import MapPosition, in_range
-from Person import Person
+from Person import Person, PersonState
 from Diesease import Virus1
 
 
@@ -18,7 +17,7 @@ class SimulationState:
                 dead_people.append(person)
             self.update_position(person, new_pos)
 
-            if person.state().transmissable():
+            if person.state.transmissable():
                 self.spread_diesase(person)
 
         for person in dead_people:
@@ -27,12 +26,12 @@ class SimulationState:
     def spread_diesase(self, person):
         neighbors = self.find_neighbors(person)
         for neighbor in list(neighbors):
-            if neighbor.resistant == True or neighbor.as_nt == True:
+            if neighbor.state in [PersonState.DIESASE_RESISTANT, PersonState.DIESASE_HOST_ASYMPTOMATIC_NONTRANSMISSABLE]:
                 continue
             host_diesase = person.diseases[0] #TODO: don't use first virus but most relevant
             if host_diesase.type() not in map(lambda d: d.type(), neighbor.diseases):
-                # print("Spread")
                 neighbor.diseases.append(host_diesase.clone(neighbor))
+                neighbor.state = PersonState.DIESASE_HOST_SYMPTOMATIC
 
     def find_neighbors(self, person: Person, predicate=None):
         if (predicate is None):

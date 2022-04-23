@@ -20,17 +20,15 @@ class PersonState(Enum):
 
 
 class Person:
-    def __init__(self, pos: MapPosition, map: Map) -> None:
+    def __init__(self, pos: MapPosition, map: Map, state: PersonState = PersonState.DIESASE_FREE) -> None:
         self.hasVirus = None  # to be ultimately replaced with list of hosted viruses?
         self.diseases = []
         self.age = random.choices(np.arange(1,101), weights=PROB)[0]
         self.immunity_modifier = random.randint(0, 11)  # positive - better immunity
         self.pos = pos
         self.map = map
+        self.state = state
         self.dead = False
-        self.resistant = False
-        self.as_nt = False
-        self.as_t = False
         self.general_direction = (random.randint(-1, 2), random.randint(-2, 2))
 
     def step(self) -> MapPosition:
@@ -48,10 +46,10 @@ class Person:
         for disease in self.diseases:
             disease.step()
 
-        if self.resistant:
+        if self.state == PersonState.DIESASE_RESISTANT:
             self.days_of_resistance -= 1 
             if self.days_of_resistance == 0:
-                self.resistant = False 
+                self.state = PersonState.DIESASE_FREE
 
         return self.pos, self.dead
 
@@ -59,23 +57,11 @@ class Person:
         return "Person{pos:" + self.pos.__repr__() + "," + "diseases:" + str(self.diseases) + "}"
     
     def resistance(self):
-        self.resistant = True
+        self.state = PersonState.DIESASE_RESISTANT
         self.days_of_resistance = random.randint(20,30)
         self.diseases.pop()
 
     def die(self):
-        # print("Person died")
         self.dead = True
+        self.state = PersonState.DEAD
 
-    def state(self):
-        if self.dead:
-            return PersonState.DEAD
-        elif self.as_t:
-            return PersonState.DIESASE_HOST_ASYMPTOMATIC_TRANSMISSABLE
-        elif self.as_nt:
-            return PersonState.DIESASE_HOST_ASYMPTOMATIC_NONTRANSMISSABLE
-        elif self.resistant:
-            return PersonState.DIESASE_RESISTANT
-        elif not self.diseases:
-            return PersonState.DIESASE_FREE
-        return PersonState.DIESASE_HOST_SYMPTOMATIC  # TODO: expand

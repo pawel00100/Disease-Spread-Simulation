@@ -17,15 +17,14 @@ def to_image(simulation_state: SimulationState, map: Map) -> Image.Image:
     image = Image.new("RGB", size, background_color)
 
     def get_color(person: Person):
-        if person.state().value == PersonState.DIESASE_FREE.value:
-            return green
-        elif person.state().value == PersonState.DIESASE_RESISTANT.value:
-            return blue
-        elif person.state().value == PersonState.DIESASE_HOST_ASYMPTOMATIC_NONTRANSMISSABLE.value:
-            return lightpink
-        elif person.state().value == PersonState.DIESASE_HOST_ASYMPTOMATIC_TRANSMISSABLE.value:
-            return pink
-        return red
+        states_colors = {
+            PersonState.DIESASE_FREE: green,
+            PersonState.DIESASE_RESISTANT: blue,
+            PersonState.DIESASE_HOST_ASYMPTOMATIC_NONTRANSMISSABLE: lightpink,
+            PersonState.DIESASE_HOST_ASYMPTOMATIC_TRANSMISSABLE: pink,
+            PersonState.DIESASE_HOST_SYMPTOMATIC: red,
+        }
+        return states_colors[person.state]
 
     for person, pos in simulation_state.people.items():
         x = pos.x_pos
