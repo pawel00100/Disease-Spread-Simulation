@@ -33,6 +33,7 @@ class Virus1(Disease):
             chance = (self.severity - 80) / 20  # 0..1      0.9 - 90% of dying
             if (random.random() - chance) > 0:
                 self.host.die()
+                return
    
         if self.disease_immunity > 150:
             self.host.resistance()

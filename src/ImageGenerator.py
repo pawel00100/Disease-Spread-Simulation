@@ -9,7 +9,11 @@ pink = (255, 115, 220)
 lightpink = (255, 182, 193)
 blue = (0, 200, 235)
 green = (0, 205, 0)
+black = (0, 0, 0)
 
+color_list = [green, lightpink, pink, red, blue, black] # for plotting
+for i, c in enumerate(color_list):
+    color_list[i] = (color_list[i][0]/255, color_list[i][1]/255, color_list[i][2]/255)
 
 def to_image(simulation_state: SimulationState, map: Map) -> Image.Image:
     background_color = (0, 0, 0)
@@ -23,10 +27,11 @@ def to_image(simulation_state: SimulationState, map: Map) -> Image.Image:
             PersonState.DIESASE_HOST_ASYMPTOMATIC_NONTRANSMISSABLE: lightpink,
             PersonState.DIESASE_HOST_ASYMPTOMATIC_TRANSMISSABLE: pink,
             PersonState.DIESASE_HOST_SYMPTOMATIC: red,
+            PersonState.DEAD: black,
         }
         return states_colors[person.state]
 
-    for person, pos in simulation_state.people.items():
+    for person, pos in simulation_state.alive_people.items():
         x = pos.x_pos
         y = pos.y_pos
         padding = 2
