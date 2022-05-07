@@ -1,8 +1,12 @@
 from PIL import Image, ImageDraw
 
 from src.Map import Map
-from src.Person import Person
+from src.Person import Person, PersonState
 from src.SimulationState import SimulationState
+
+red = (255, 0, 0)
+blue = (0, 200, 235)
+green = (0, 205, 0)
 
 
 def to_image(simulation_state: SimulationState, map: Map) -> Image.Image:
@@ -11,18 +15,18 @@ def to_image(simulation_state: SimulationState, map: Map) -> Image.Image:
     image = Image.new("RGB", size, background_color)
 
     def get_color(person: Person):
-        red = (255, 0, 0)
-        blue = (0, 200, 235)
-        green = (0, 205, 0)
-        return blue
+        if person.state().value == PersonState.DIESASE_FREE.value:
+            return blue
+        return red
 
     for person, pos in simulation_state.people.items():
-        x = pos.pos.x_pos
-        y = pos.pos.y_pos
+        x = pos.x_pos
+        y = pos.y_pos
         padding = 2
         img = ImageDraw.Draw(image)
         img = img.ellipse([(x - padding, y - padding), (x + padding, y + padding)], get_color(person))
     return image
+
 
 class ImageGenerator:
     def __init__(self) -> None:

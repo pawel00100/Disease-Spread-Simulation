@@ -1,17 +1,20 @@
-from Map import Map, MapPosition
-from Person import Person
-from SimulationState import SimulationState
 import random
 
 import ImageGenerator
+from Map import Map, MapPosition
+from Person import Person
+from SimulationState import SimulationState
+from src.Diesease import Virus1
 from src.ImageGenerator import ImageGenerator
 
 
 def generate_person(pos: MapPosition, map: Map):
     return Person(pos, map)
 
+
 def generate_position(map: Map):
-    return MapPosition(random.randint(map.x_min, map.x_max), random.randint(map.y_min, map.y_max))
+    return MapPosition(random.randint(map.x_min, map.x_max), random.randint(map.y_min, map.y_max), map)
+
 
 def generate_people(n: int, map: Map):
     people_with_pos = []
@@ -23,20 +26,30 @@ def generate_people(n: int, map: Map):
 
 
 class Simulation:
-    def __init__(self, map: Map, num_people: int) -> None:
+    def __init__(self, map: Map, starting_state: SimulationState) -> None:
         self.map = map
-        self.simulation_state = SimulationState(generate_people(num_people, self.map))
+        self.simulation_state = starting_state
         self.image_generator = ImageGenerator()
 
-    def step(self):
+    def step(self, n):
         self.simulation_state.step()
         self.image_generator.add_state(self.simulation_state, self.map)
+        print("Step " + str(n))
+        print(self.simulation_state.people.keys())
 
     def steps(self, n):
-        [self.step() for _ in range(n)]
+        [self.step(i) for i in range(n)]
         self.image_generator.save_image()
 
 
 HEIGHT = 300
 WIDTH = 300
-Simulation(Map(HEIGHT, WIDTH), 90).steps(500)
+
+map = Map(HEIGHT, WIDTH)
+people = generate_people(160, map)
+
+sick_person = list(people.keys())[0]
+sick_person.diseases.append(Virus1(sick_person))
+
+starting_state = SimulationState(people)
+Simulation(map, starting_state).steps(120)
