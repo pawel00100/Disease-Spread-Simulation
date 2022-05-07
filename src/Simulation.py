@@ -1,11 +1,10 @@
 import random
-
 import ImageGenerator
 from Map import Map, MapPosition
-from Person import Person
+from Person import Person, PersonState
 from SimulationState import SimulationState
-from src.Diesease import Virus1
-from src.ImageGenerator import ImageGenerator
+from Diesease import Virus1
+from ImageGenerator import ImageGenerator
 
 
 def generate_person(pos: MapPosition, map: Map):
@@ -34,8 +33,6 @@ class Simulation:
     def step(self, n):
         self.simulation_state.step()
         self.image_generator.add_state(self.simulation_state, self.map)
-        print("Step " + str(n))
-        print(self.simulation_state.people.keys())
 
     def steps(self, n):
         [self.step(i) for i in range(n)]
@@ -50,6 +47,7 @@ people = generate_people(160, map)
 
 sick_person = list(people.keys())[0]
 sick_person.diseases.append(Virus1(sick_person))
+sick_person.state = PersonState.DIESASE_HOST_SYMPTOMATIC
 
 starting_state = SimulationState(people)
-Simulation(map, starting_state).steps(120)
+Simulation(map, starting_state).steps(150)

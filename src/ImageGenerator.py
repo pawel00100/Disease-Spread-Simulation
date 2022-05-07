@@ -1,10 +1,12 @@
 from PIL import Image, ImageDraw
 
-from src.Map import Map
-from src.Person import Person, PersonState
-from src.SimulationState import SimulationState
+from Map import Map
+from Person import Person, PersonState
+from SimulationState import SimulationState
 
-red = (255, 0, 0)
+red = (185, 0, 0)
+pink = (255, 115, 220)
+lightpink = (255, 182, 193)
 blue = (0, 200, 235)
 green = (0, 205, 0)
 
@@ -15,9 +17,14 @@ def to_image(simulation_state: SimulationState, map: Map) -> Image.Image:
     image = Image.new("RGB", size, background_color)
 
     def get_color(person: Person):
-        if person.state().value == PersonState.DIESASE_FREE.value:
-            return blue
-        return red
+        states_colors = {
+            PersonState.DIESASE_FREE: green,
+            PersonState.DIESASE_RESISTANT: blue,
+            PersonState.DIESASE_HOST_ASYMPTOMATIC_NONTRANSMISSABLE: lightpink,
+            PersonState.DIESASE_HOST_ASYMPTOMATIC_TRANSMISSABLE: pink,
+            PersonState.DIESASE_HOST_SYMPTOMATIC: red,
+        }
+        return states_colors[person.state]
 
     for person, pos in simulation_state.people.items():
         x = pos.x_pos
