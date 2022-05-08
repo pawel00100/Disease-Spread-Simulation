@@ -7,16 +7,20 @@ PROB = np.concatenate((np.full((1,50), 50)[0], np.arange(50,0,-1)))
 
 
 class PersonState(Enum):
-    DIESASE_FREE = 1
-    DIESASE_HOST_ASYMPTOMATIC_NONTRANSMISSABLE = 2
-    DIESASE_HOST_ASYMPTOMATIC_TRANSMISSABLE = 3
-    DIESASE_HOST_SYMPTOMATIC = 4
-    DIESASE_RESISTANT = 5
-    DEAD = 6
+    DIESASE_FREE = 'Healthy'
+    DIESASE_HOST_ASYMPTOMATIC_NONTRANSMISSABLE = 'Non transmissible'
+    DIESASE_HOST_ASYMPTOMATIC_TRANSMISSABLE = 'Transmissible'
+    DIESASE_HOST_SYMPTOMATIC = 'Symptomatic'
+    DIESASE_RESISTANT = 'Resistant'
+    DEAD = 'Dead'
 
     def transmissable(self):
         return self.value == PersonState.DIESASE_HOST_ASYMPTOMATIC_TRANSMISSABLE.value or \
                self.value == PersonState.DIESASE_HOST_SYMPTOMATIC.value
+
+
+possible_person_states_names = [e.name for e in PersonState]
+possible_person_states_values = [e.value for e in PersonState]
 
 
 class Person:
@@ -44,7 +48,8 @@ class Person:
             self.immunity_modifier += 0.15 - 0.001 * self.age
 
         for disease in self.diseases:
-            disease.step()
+            if not self.dead:
+                disease.step()
 
         if self.state == PersonState.DIESASE_RESISTANT:
             self.days_of_resistance -= 1 

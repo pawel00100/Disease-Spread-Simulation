@@ -5,6 +5,7 @@ from Person import Person, PersonState
 from SimulationState import SimulationState
 from Diesease import Virus1
 from ImageGenerator import ImageGenerator
+from src.statistics.StatisticSystem import StatisticSystem
 
 
 def generate_person(pos: MapPosition, map: Map):
@@ -28,19 +29,22 @@ class Simulation:
     def __init__(self, map: Map, starting_state: SimulationState) -> None:
         self.map = map
         self.simulation_state = starting_state
+        self.statistic_system = StatisticSystem()
         self.image_generator = ImageGenerator()
 
     def step(self, n):
         self.simulation_state.step()
+        self.statistic_system.add_snapshot(self.simulation_state.get_statistic_snapshot())
         self.image_generator.add_state(self.simulation_state, self.map)
 
     def steps(self, n):
         [self.step(i) for i in range(n)]
         self.image_generator.save_image()
+        self.statistic_system.display_plot()
 
 
-HEIGHT = 300
-WIDTH = 300
+HEIGHT = 200
+WIDTH = 200
 
 map = Map(HEIGHT, WIDTH)
 people = generate_people(160, map)
@@ -50,4 +54,4 @@ sick_person.diseases.append(Virus1(sick_person))
 sick_person.state = PersonState.DIESASE_HOST_SYMPTOMATIC
 
 starting_state = SimulationState(people)
-Simulation(map, starting_state).steps(150)
+Simulation(map, starting_state).steps(250)
