@@ -2,6 +2,7 @@ import random
 from enum import Enum
 import numpy as np
 from Map import MapPosition, Map
+from constants import AGE_ALL_IMMUNITY, RAND_IMMUNITY
 
 PROB = np.concatenate((np.full((1,50), 50)[0], np.arange(50,0,-1)))
 
@@ -24,7 +25,7 @@ possible_person_states_values = [e.value for e in PersonState]
 
 
 class Person:
-    def __init__(self, pos: MapPosition, map: Map, state: PersonState = PersonState.DIESASE_FREE) -> None:
+    def __init__(self, pos: MapPosition, map: Map, iter: int, state: PersonState = PersonState.DIESASE_FREE) -> None:
         self.hasVirus = None  # to be ultimately replaced with list of hosted viruses?
         self.diseases = []
         self.age = random.choices(np.arange(1,101), weights=PROB)[0]
@@ -34,6 +35,7 @@ class Person:
         self.state = state
         self.dead = False
         self.general_direction = (random.randint(-1, 2), random.randint(-2, 2))
+        self.iter = iter
 
     def step(self) -> MapPosition:
         x, y = random.randint(-1, 1), random.randint(-1, 1)
@@ -45,7 +47,7 @@ class Person:
             self.general_direction = (random.randint(-2, 2), random.randint(-2, 2))
 
         if self.diseases:
-            self.immunity_modifier += 0.15 - 0.001 * self.age
+            self.immunity_modifier += RAND_IMMUNITY[self.iter] - AGE_ALL_IMMUNITY[self.iter] * self.age
 
         for disease in self.diseases:
             if not self.dead:

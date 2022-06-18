@@ -2,7 +2,7 @@ from typing import Dict
 from Map import MapPosition, in_range
 from Person import Person, PersonState
 from Diesease import Virus1
-from src.statistics.StatisticSnapshot import StatisticSnapshot
+from statistics.StatisticSnapshot import StatisticSnapshot
 
 
 def count_items(_list):
@@ -10,10 +10,11 @@ def count_items(_list):
 
 
 class SimulationState:
-    def __init__(self, people: Dict[Person, MapPosition]) -> None:
+    def __init__(self, people: Dict[Person, MapPosition], iter: int) -> None:
         super().__init__()
         self.alive_people = people  # to be replaced with better data structure in the future
         self.dead_people = {}
+        self.iter = iter 
 
     def step(self):
         people_dead_in_this_step = {}
@@ -37,7 +38,7 @@ class SimulationState:
                 continue
             host_diesase = person.diseases[0]  # TODO: don't use first virus but most relevant
             if host_diesase.type() not in map(lambda d: d.type(), neighbor.diseases):
-                neighbor.diseases.append(host_diesase.clone(neighbor))
+                neighbor.diseases.append(host_diesase.clone(neighbor, self.iter))
                 neighbor.state = PersonState.DIESASE_HOST_SYMPTOMATIC
 
     def find_neighbors(self, person: Person, predicate=None):
@@ -65,4 +66,4 @@ class SimulationState:
 
     def get_statistic_snapshot(self):
         states = [p.state for p in self.all_people()]
-        return StatisticSnapshot(count_items(states))
+        return StatisticSnapshot(count_items(states), self.iter)

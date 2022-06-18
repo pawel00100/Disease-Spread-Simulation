@@ -5,22 +5,23 @@ from Person import Person, PersonState
 from SimulationState import SimulationState
 from Diesease import Virus1
 from ImageGenerator import ImageGenerator
-from src.statistics.StatisticSystem import StatisticSystem
+from statistics.StatisticSystem import StatisticSystem
+from constants import RAND_IMMUNITY
+from matplotlib import pyplot as plt
 
-
-def generate_person(pos: MapPosition, map: Map):
-    return Person(pos, map)
+def generate_person(pos: MapPosition, map: Map, iter: int):
+    return Person(pos, map, iter)
 
 
 def generate_position(map: Map):
     return MapPosition(random.randint(map.x_min, map.x_max), random.randint(map.y_min, map.y_max), map)
 
 
-def generate_people(n: int, map: Map):
+def generate_people(n: int, map: Map, iter: int):
     people_with_pos = []
     for i in range(n):
         pos = generate_position(map)
-        person_with_pos = (generate_person(pos, map), pos)
+        person_with_pos = (generate_person(pos, map, iter), pos)
         people_with_pos.append(person_with_pos)
     return dict(people_with_pos)
 
@@ -47,11 +48,16 @@ HEIGHT = 200
 WIDTH = 200
 
 map = Map(HEIGHT, WIDTH)
-people = generate_people(160, map)
+fig, ax = plt.subplots(2, 2)
 
-sick_person = list(people.keys())[0]
-sick_person.diseases.append(Virus1(sick_person))
-sick_person.state = PersonState.DIESASE_HOST_SYMPTOMATIC
+for i in range(len(RAND_IMMUNITY)):
+    people = generate_people(160, map, i)
 
-starting_state = SimulationState(people)
-Simulation(map, starting_state).steps(250)
+    sick_person = list(people.keys())[0]
+    sick_person.diseases.append(Virus1(sick_person, i))
+    sick_person.state = PersonState.DIESASE_HOST_SYMPTOMATIC
+
+    starting_state = SimulationState(people, i)
+    Simulation(map, starting_state).steps(250)
+
+plt.show()
