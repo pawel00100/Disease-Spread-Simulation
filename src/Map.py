@@ -2,12 +2,14 @@ import math
 
 
 def in_range(first_pos, second_pos, distance: float) -> bool:
-    return math.sqrt((first_pos.x_pos - second_pos.x_pos) ** 2 + (first_pos.y_pos - second_pos.y_pos) ** 2) < distance
+    x = (first_pos.x_pos - second_pos.x_pos)
+    y = (first_pos.y_pos - second_pos.y_pos)
+    return (x * x + y * y) < distance * distance
 
 
 class MapPosition:
     def __init__(self, x: float, y: float, map) -> None:
-        super().__init__()
+        # super().__init__()
         self.x_pos = x
         self.y_pos = y
         self.map = map

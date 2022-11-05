@@ -36,7 +36,7 @@ class Virus1(Disease):
                 return
    
         if self.disease_immunity > 150:
-            self.host.resistance()
+            self.host.resistance_gained()
         elif self.disease_immunity > 90:
             self.host.state = PersonState.DIESASE_HOST_ASYMPTOMATIC_NONTRANSMISSABLE
         elif self.disease_immunity > 30:

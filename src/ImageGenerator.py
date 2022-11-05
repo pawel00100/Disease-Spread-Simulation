@@ -47,6 +47,8 @@ class ImageGenerator:
     def add_state(self, simulation_state: SimulationState, map: Map):
         image = to_image(simulation_state, map)
         self.imgs.append(image)
+        # pass
 
     def save_image(self):
         self.imgs[0].save('disease_spread.gif', save_all=True, append_images=self.imgs[1:], format='GIF', optimize=False, duration=90)
+        # pass
